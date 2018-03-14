@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="deep-dive-codebreaker-cli-client:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/deep_dive_codebreaker_cli_client_jar</output-path>
+    <root id="root">
+      <element id="archive" name="deep-dive-codebreaker-cli-client.jar">
+        <element id="module-output" name="deep-dive-codebreaker-cli-client" />
+      </element>
+      <element id="library" level="project" name="com.squareup.retrofit2:converter-gson:2.3.0" />
+      <element id="library" level="project" name="com.squareup.retrofit2:retrofit:2.3.0" />
+    </root>
+  </artifact>
+</component>
