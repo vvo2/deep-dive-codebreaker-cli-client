@@ -22,6 +22,7 @@ public class Client {
   private static final String SERVICE_URL_KEY = "baseUrl";
   private static final String GAME_PROMPT_KEY = "gamePrompt";
   private static final String GUESS_PROMPT_KEY = "guessPrompt";
+  private static final String GUESS_LENGTH_ERROR_KEY = "guessLengthError";
   private static final String GUESS_RESULT_KEY = "guessResult";
   private static final String POSITIVE_CONDITION_KEY = "positivePluralCondition";
   private static final String NEGATIVE_CONDITION_KEY = "negativePluralCondition";
@@ -55,8 +56,6 @@ public class Client {
   }
 
   private void setup() throws IOException {
-    out = new PrintStream(System.out, true, "UTF-8");
-    in = new Scanner(System.in, "UTF-8");
     properties = new Properties();
     properties.load(getClass().getClassLoader().getResourceAsStream(PROPERTIES_PATH));
     bundle = ResourceBundle.getBundle(RESOURCE_BUNDLE_PATH);
@@ -84,6 +83,10 @@ public class Client {
     while (keepPlaying) {
       out.printf(bundle.getString(GUESS_PROMPT_KEY), guessCount);
       String input = in.nextLine().trim();
+      while (input.length() != game.getLength() && !input.isEmpty()) {
+        out.printf(bundle.getString(GUESS_LENGTH_ERROR_KEY), game.getLength());
+        input = in.nextLine().trim();
+      }
       if (input.isEmpty()) {
         keepPlaying = !surrender();
       } else if (guess(input)) {
@@ -113,10 +116,12 @@ public class Client {
     String input = in.nextLine().trim().toLowerCase();
     if (!input.isEmpty()
         && (input.charAt(0) == bundle.getString(AFFIRMATIVE_CHARACTER_KEY).charAt(0))) {
-      gameService.surrender(game.getId(), Boolean.TRUE.toString()).execute();
+      gameService.surrender(game.getId(), true).execute();
       game = gameService.read(game.getId()).execute().body();
-      out.printf(bundle.getString(SURRENDER_RESULT_KEY), game.getCode());
-      return true;
+      if (game.isSurrendered()) {
+        out.printf(bundle.getString(SURRENDER_RESULT_KEY), game.getCode());
+        return true;
+      }
     }
     return false;
   }
