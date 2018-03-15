@@ -33,7 +33,7 @@ public interface GameService {
       "Content-type: text/plain",
       "Accept: text/plain"
   })
-  @PUT("games/{id}/surrender")
-  Call<Boolean> surrender(@Path("id") UUID id, @Body String action);
+  @PUT("games/{id}/surrendered")
+  Call<Boolean> surrender(@Path("id") UUID id, @Body boolean surrender);
 
 }
